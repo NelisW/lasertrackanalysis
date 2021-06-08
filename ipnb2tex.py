@@ -959,7 +959,7 @@ def processHTMLTree(html,cell,addurlcommand):
         elif child.tag == 'blockquote':
             tmp += "\n\\begin{quote}\n" + processParagraph(child,'',addurlcommand,cell).strip() + "\\end{quote}\n\n"
 
-        elif child.tag == 'table':
+        elif child.tag == 'table' or child.tag == 'div':
             tmp += convertHtmlTable(child, cell)
             table_index += 1
 
