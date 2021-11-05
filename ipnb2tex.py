@@ -47,7 +47,7 @@ protectEvnStringStart = 'beginincludegraphics\n'
 protectEvnStringEnd = 'endincludegraphics\n'
 
 
-docoptstring = """Usage: ipnb2tex.py [<ipnbfilename>] [<outfilename>]  [<imagedir>] [-i] [-u] 
+docoptstring = """Usage: ipnb2tex.py [<ipnbfilename>] [<outfilename>]  [<imagedir>] [-i] [-u] [-a]
        ipnb2tex.py  (-h | --help)
 
 The ipnb2tex.py reads the IPython notebook and converts
@@ -73,6 +73,7 @@ Options:
   -i  [optional], the lower case letter i, if this option is given the code
       listings are printed inline with the body text where they occur,
       otherwise listings are floated to the end of the document.
+  -a  [optional] append other bibtex entries to this one
 
 """
 
@@ -147,6 +148,13 @@ prebreak=\raisebox{0ex}[0ex][0ex]{$\dlsh$} % add linebreak symbol
 \newlength{\textwidthm}
 \setlength{\textwidthm}{\textwidth}
 
+
+% this is entered just before the end{document}
+\newcommand{\atendofdoc}{
+\bibliographystyle{IEEEtran}
+\bibliography{bibliography}
+}
+
 %and finally the document begin.
 \begin{document}
 \author{Author}
@@ -156,34 +164,44 @@ prebreak=\raisebox{0ex}[0ex][0ex]{$\dlsh$} % add linebreak symbol
 """
 
 
+# ################################################################################
+# #lists the files in a directory and subdirectories (from Python Cookbook)
+# def listFiles(root, patterns='*', recurse=1, return_folders=0):
+#     """lists the files in a directory and subdirectories (from Python Cookbook)
+
+#     Extensively reworked for Python 3.
+#     """
+#     # Expand patterns from semicolon-separated string to list
+#     pattern_list = patterns.split(';')
+#     filenames = []
+#     filertn = []
+
+#     for dirpath,dirnames,files in os.walk(root):
+#         if dirpath==root or recurse:
+#             for filen in files:
+#                 filenames.append(os.path.abspath(os.path.join(os.getcwd(),dirpath,filen)))
+#             if return_folders:
+#                 for dirn in dirnames:
+#                     filenames.append(os.path.abspath(os.path.join(os.getcwd(),dirpath,dirn)))
+#     for name in filenames:
+#         if return_folders or os.path.isfile(name):
+#             for pattern in pattern_list:
+#                 if fnmatch.fnmatch(name, pattern):
+#                     filertn.append(name)
+#                     break
+
+#     return filertn
+
+
+
 ################################################################################
-#lists the files in a directory and subdirectories (from Python Cookbook)
-def listFiles(root, patterns='*', recurse=1, return_folders=0):
-    """lists the files in a directory and subdirectories (from Python Cookbook)
+def latexEscapeCaption(string):
 
-    Extensively reworked for Python 3.
-    """
-    # Expand patterns from semicolon-separated string to list
-    pattern_list = patterns.split(';')
-    filenames = []
-    filertn = []
+    # https://stackoverflow.com/questions/18360976/match-latex-reserved-characters-with-regex
+    # string = re.sub(r'((?<!\)[#\$%\^&_\{\}~\\])','\1', string)
+    # string = re.sub(r'([#%&_])',r'\\\1', string)
 
-    for dirpath,dirnames,files in os.walk(root):
-        if dirpath==root or recurse:
-            for filen in files:
-                filenames.append(os.path.abspath(os.path.join(os.getcwd(),dirpath,filen)))
-            if return_folders:
-                for dirn in dirnames:
-                    filenames.append(os.path.abspath(os.path.join(os.getcwd(),dirpath,dirn)))
-    for name in filenames:
-        if return_folders or os.path.isfile(name):
-            for pattern in pattern_list:
-                if fnmatch.fnmatch(name, pattern):
-                    filertn.append(name)
-                    break
-
-    return filertn
-
+    return string
 
 ################################################################################
 def latexEscapeForHtmlTableOutput(string):
@@ -262,8 +280,8 @@ def convertHtmlTable(html, cell):
 
         #first determine arrays of colspan and row span
         # these arrays have nonzero values in spanned cell, no data here
-        rowspan = np.zeros((row_counts, col_counts), dtype=np.int)
-        colspan = np.zeros((row_counts, col_counts), dtype=np.int)
+        rowspan = np.zeros((row_counts, col_counts), dtype=np.int64)
+        colspan = np.zeros((row_counts, col_counts), dtype=np.int64)
         irow = 0
         for row in table.findall('tr'):
             icol = 0
@@ -343,12 +361,13 @@ def convertHtmlTable(html, cell):
             labelStr = '\\label{{{}-{}}}'.format(tlabstr, table_index)
             if table_index == 0:
                 labelStr += '\\label{{{}}}'.format(tlabstr)
+        table_index += 1
 
         texStr = ''
         if captionStr:
             texStr = texStr + '\n\\begin{table}['+locator+']\n'
             texStr += '\\centering\n'
-            texStr += '\\caption{'+'{}{}'.format(captionStr,labelStr)+'}\n'
+            texStr += '\\caption{'+'{}{}'.format(latexEscapeCaption(captionStr),labelStr)+'}\n'
         else:
              texStr += '\\begin{center}\n'
 
@@ -361,7 +380,6 @@ def convertHtmlTable(html, cell):
         else:
             texStr += '\\end{center}\n\n'
 
-        table_index += 1
         rtnString += texStr
 
     return rtnString
@@ -450,12 +468,13 @@ def processLaTeXOutCell(cellOutput,output_index,outs,cell,addurlcommand):
             labelStr = '\\label{{{}-{}}}'.format(tlabstr, table_index)
             if table_index == 0:
                 labelStr += '\\label{{{}}}'.format(tlabstr)
+        table_index += 1
 
         outstr += '{\n'
         if captionStr:
             outstr =  outstr + '\n\\begin{table}['+locator+']\n'
             outstr += '\\centering\n'
-            outstr += '\\caption{'+'{}{}'.format(captionStr,labelStr)+'}\n'
+            outstr += '\\caption{'+'{}{}'.format(latexEscapeCaption(captionStr),labelStr)+'}\n'
         outstr += booktabstr
         outstr += '\n\\begin{{{}}}\n'.format(fontsizeStr)
         outstr += '\\renewcommand{\\arraystretch}{1.1}\n'
@@ -465,7 +484,6 @@ def processLaTeXOutCell(cellOutput,output_index,outs,cell,addurlcommand):
         if captionStr:
             outstr += '\\end{table}\n\n'
         outstr += '}\n\n'
-        table_index += 1
 
     # process figure with caption,  either a string or a list of strings
     elif getMetaData(cell, figure_index, 'figureCaption', 'caption',''):
@@ -577,7 +595,7 @@ def prepInput(cell, cell_index, inlinelistings):
                 captionStr = 'Code Listing in cell {}'.format(cell_index)
 
         if captionStr:
-            captionStr = '{'+r'{}}}, label={}'.format(captionStr, labelStr)
+            captionStr = '{'+r'{}}}, label={}'.format(latexEscapeCaption(captionStr), labelStr)
 
         if showListing and len(lsting)>0:
             if inlinelistings:
@@ -684,7 +702,13 @@ def getMetaData(cell, output_index, captionID, metaID, defaultValue=''):
 
             # sometimes lists are correctly imported and sometimes not
             if isinstance(inVal, str) and '[' in inVal: 
-                inVal = eval(inVal)
+                import ast
+                inVal = ast.literal_eval(inVal)
+                # for it,item in enumerate(inVal):
+                #     if isinstance(item,str):
+                #         inVal[it] = item.replace('\\\\','\\')
+                #     else:
+                #         inVal[it] = item
 
             if  isinstance(inVal, str):
                 outVal = inVal
@@ -783,10 +807,31 @@ def processDisplayOutput(cellOutput, cell, cell_index, output_index, imagedir, i
         if 'text/plain' in cellOutput.data.keys():
             return prepOutput(cellOutput, cell, cell_index, output_index, imagedir, infile,addurlcommand)
 
+    if 'display_data' in cellOutput['output_type']:
+        if 'application/vnd.jupyter.widget-view+json' in cellOutput['data'].keys():
+            if 'model_id' in cellOutput['data']['application/vnd.jupyter.widget-view+json'].keys():
+                texStr += f"\n\nCell contains a Jupyter widget with model\_id "
+                texStr += f"{cellOutput['data']['application/vnd.jupyter.widget-view+json']['model_id']} "
+                texStr += f"please open the notebook for display of this widget.\n\n"
+                return texStr
 
+    strErr = f"""
+    Unknown cell type(s) in this cell:
+        cell_keys:              {cell.keys()}
+        cell_type:              {cell['cell_type']}
+        cell execution_count:   {cell['execution_count']}
+        cell source:            {cell['source']}
 
-    raise NotImplementedError("Unknow cell type(s): {}".format(cellOutput.keys()))
+        cell meta:              {cell['metadata']}
+        cellOutput keys:        {cellOutput.keys()}
+        cellOutput output_type: {cellOutput['output_type']}
+        cellOutput data:        {cellOutput['data']}
+        cellOutput metadata:    {cellOutput['metadata']}
+        output_index:           {output_index}
+        """
+        # cell output:            {cell['outputs']}
 
+    raise NotImplementedError(strErr)
 
 
 ################################################################################
@@ -959,12 +1004,15 @@ def processHTMLTree(html,cell,addurlcommand):
         elif child.tag == 'blockquote':
             tmp += "\n\\begin{quote}\n" + processParagraph(child,'',addurlcommand,cell).strip() + "\\end{quote}\n\n"
 
-        elif child.tag == 'table' or child.tag == 'div':
+        elif child.tag == 'table':
             tmp += convertHtmlTable(child, cell)
             table_index += 1
 
         elif child.tag == 'div':
             pass
+            if cell is not None:
+                tmp += convertHtmlTable(child, cell)
+                table_index += 1
 
         elif child.tag == 'iframe':
             # we only check for embedded pdf in iframe for now
@@ -1126,7 +1174,12 @@ def processParagraph(pnode, tmp, addurlcommand,cell):
             tmp += processVerbatim(child)
 
         elif child.tag == 'strong':
-            tmp +=  r"\textbf{" + child.text + "}" + childtail
+            if child.text:
+                tmp +=  r"\textbf{" + child.text + "}" + childtail
+            else:
+                pass
+                # print(child.tag)
+                # print(child.tail)
 
         elif child.tag == 'font':
             #currently ignore font attributes
@@ -1178,7 +1231,8 @@ def processParagraph(pnode, tmp, addurlcommand,cell):
             tmp += ftmp
 
         else:
-            raise ValueError('so far={}, need to learn to process this:'.format(tmp), child.tag)
+            strErr = f'so far={tmp}, need to learn to process this:'
+            raise ValueError(strErr, child.tag)
 
     if pnode.tail:
         tmp += pnode.tail
@@ -1214,6 +1268,7 @@ def prepareFigureFloat(cell,figure_index,filename=None,payload=None,fontsizeStr=
         #build the complete bitmap size latex string
         width = getMetaData(cell, figure_index, 'figureCaption', 'width', 0.9)
         locator = getMetaData(cell, figure_index, 'figureCaption', 'locator', 'tb')
+        angle = getMetaData(cell, figure_index, 'figureCaption', 'angle', 0)
     
         fstring += '{\n'
         fstring = fstring + '\n\\begin{figure}['+locator+']\n'
@@ -1221,20 +1276,20 @@ def prepareFigureFloat(cell,figure_index,filename=None,payload=None,fontsizeStr=
         fstring += '\n\\begin{{{}}}\n'.format(fontsizeStr)
         if payload is None: # not a latex cell
             fstring += protectEvnStringStart
-            fstring += '\\includegraphics[width='+f'{width}'+'\\textwidth]{'+filename+'}\n'
+            fstring += '\\includegraphics[width='+f'{width}'+'\\textwidth, angle='+f'{angle}'+']{'+filename+'}\n'
             fstring += protectEvnStringEnd
         else:
             # any figure here will not be a png, jpg or eps, so just dump
             fstring += payload
         fstring += '\\end{{{}}}\n'.format(fontsizeStr)
         if captionStr:
-            fstring += '\\caption{'+'{}{}'.format(captionStr,labelStr)+'}\n'
+            fstring += '\\caption{'+'{}{}'.format(latexEscapeCaption(captionStr),labelStr)+'}\n'
         fstring += '\\end{figure}\n\n'
         fstring += '}\n\n'
     else:
         fstring += '\\begin{center}\n'
         fstring += protectEvnStringStart
-        fstring += '\\includegraphics[width=0.9\\textwidth]{'+filename+'}\n'
+        fstring += '\\includegraphics[width=0.9\\textwidth, angle=0]{'+filename+'}\n'
         fstring += protectEvnStringEnd
         fstring += '\\end{center}\n'
     
@@ -1290,7 +1345,7 @@ def createImageDir(imagedir):
 
 ################################################################################
 # here we do one at at time
-def processOneIPynbFile(infile, outfile, imagedir, inlinelistings, addurlcommand):
+def processOneIPynbFile(infile, outfile, imagedir, inlinelistings, addurlcommand,appendbibtex):
 
     #if required by option create a chapter for floated listings
     listingsstring = ''
@@ -1302,7 +1357,6 @@ def processOneIPynbFile(infile, outfile, imagedir, inlinelistings, addurlcommand
     print('add url to bibtex url={}'.format(addurlcommand))
 
     pdffile = outfile.replace('.tex', '.pdf')
-    bibfile = outfile.replace('.tex', '.bib')
 
     # nb = ipnbcurrent.read(io.open(infile, encoding='utf-8'), 'json')
     # if len(nb.worksheets) > 1:
@@ -1325,6 +1379,11 @@ def processOneIPynbFile(infile, outfile, imagedir, inlinelistings, addurlcommand
         if cell_index==0:
             if not 'raw' in cell.cell_type:
                 output += standardHeader
+                bibfile = 'bibliography.bib'
+            else:
+                bibfile = outfile.replace('.tex', '.bib')
+                print(f'bibfile is {bibfile}')
+
         # print('\n********','cell.cell_type ={} cell={}'.format(cell.cell_type,cell))
         if cell.cell_type not in fnTableCell:
             raise NotImplementedError("Unknown cell type: >{}<.".format(cell.cell_type))
@@ -1350,19 +1409,21 @@ def processOneIPynbFile(infile, outfile, imagedir, inlinelistings, addurlcommand
     with io.open(outfile, 'w', encoding='utf-8') as f:
         f.write(output)
 
-    print('\nWriting bibtex files:')
-    filenames = listFiles('.','*.bib',recurse=1)
+    print('\nWriting bibtex file(s):')
     if os.path.exists(bibfile):
         os.remove(bibfile)
     with io.open(bibfile, 'w', encoding='utf-8') as f:
-        # write any other bib files found in the root folder
-        if len(filenames)>0:
-            for filename in filenames:
-                if filename not in bibfile:
-                    print(f' - appending contents from {filename} to {bibfile}')
-                    with open(filename,'r') as fin:
-                        lines = fin.read()
-                        f.write(lines)
+        filenames = []
+        if appendbibtex:
+            filenames = listFiles('.','*.bib',recurse=1)
+            # read any other bib files found in the root folder
+            if len(filenames)>0:
+                for filename in filenames:
+                    if filename not in bibfile:
+                        print(f' - appending contents from {filename} to {bibfile}')
+                        with open(filename,'r') as fin:
+                            lines = fin.read()
+                            f.write(lines)
 
         #write the entries gathered from the notebook
         if len(bibtexlist):
@@ -1473,6 +1534,7 @@ def main():
     imagedir =  args['<imagedir>']
     inlinelistings = args['-i']
     addurlcommand = args['-u']
+    appendbibtex = args['-a']
 
     # find the image directory
     imagedir = createImageDir(imagedir)
@@ -1482,7 +1544,7 @@ def main():
 
     #process the list of files found in spec
     for infile, outfile in zip(infiles, outfiles):
-        processOneIPynbFile(infile, outfile, imagedir, inlinelistings, addurlcommand)
+        processOneIPynbFile(infile, outfile, imagedir, inlinelistings, addurlcommand,appendbibtex)
 
     print('\nfini!')
 
