@@ -1,0 +1,189 @@
+% -*- TeX -*- -*- UK -*- -*- Soft -*-
+
+
+% here we can keep commands etc. to no clutter the root file
+
+\hyphenation{prod-uct}
+\hyphenation{micro-bolo-meter}
+
+\usepackage{blindtext}
+\usepackage{multirow}
+\usepackage{comment}
+\usepackage{amsmath}
+\usepackage{enumitem}
+
+
+\usepackage{imakeidx}
+\usepackage[indentunit=15pt,justific=raggedright, columnsep=10pt, font=normalsize]{idxlayout}
+% to make index and hyperref work together, otherwise formatting suppresses hyperref
+\newcommand{\BH}[1]{\hyperpage{#1}}
+% https://tex.stackexchange.com/questions/575684/formatting-a-two-column-index-with-subitems
+\makeatletter
+\let\ori@idxitem\@idxitem
+\def\@idxitem{\clear@penalties\ori@idxitem}
+\def\clear@penalties{\subitem@count=3 }
+\newcount\subitem@count
+\def\subitem{%
+  \advance\subitem@count -1
+  \par
+  \ifnum\subitem@count>0 \penalty10000 \fi
+  \ori@idxitem\hspace*{\ila@subindent}%
+}
+\makeatother
+
+
+\usepackage{amssymb}
+\usepackage{pdfpages}
+\usepackage{subcaption}
+
+\newcommand{\umlder}{$\lhd\!-$} % left hand diamond, for uml derived class
+
+\setcounter{section}{0}
+\setcounter{secnumdepth}{6}
+
+
+\definecolor{LightGrey}{rgb}{0.95,0.95,0.95}
+\definecolor{light-gray}{gray}{0.95}
+\definecolor{half-gray}{gray}{0.75}
+\definecolor{LightRed}{rgb}{1.0,0.9,0.9}
+\definecolor{brickred}{rgb}{0.8, 0.25, 0.33}
+\definecolor{midnightblue}{rgb}{0.1, 0.1, 0.44}
+\definecolor{pinegreen}{rgb}{0.0, 0.47, 0.44}
+\definecolor{blizzardblue}{rgb}{0.67, 0.9, 0.93}
+\definecolor{bondiblue}{rgb}{0.0, 0.58, 0.71}  
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\definecolor{mymauve}{rgb}{0.58,0,0.82}
+
+\sisetup{per-mode=symbol}
+\DeclareSIUnit\atm{atm}
+\DeclareSIUnit\torr{torr}
+\newcommand{\myrad}{\si{\watt\per(\steradian.\metre\squared)}} 
+\newcommand{\myirrad}{\si{\watt\per(\metre\squared)}} 
+\newcommand{\mymps}{\si{\meter\per\second}}
+\newcommand{\mympssq}{\si{\meter\per\second\squared}}
+\newcommand{\mydps}{\si{\degree\per\second}}
+\newcommand{\mym}{\si{\metre}}
+\newcommand{\mymm}{\si{\milli\metre}}
+\newcommand{\mykm}{\si{\kilo\metre}}
+\newcommand{\myum}{\si{\micro\metre}}
+\newcommand{\myus}{\si{\micro\second}}
+\newcommand{\myms}{\si{\milli\second}}
+\newcommand{\myuw}{\si{\micro\watt}}
+\newcommand{\myua}{\si{\micro\ampere}}
+\newcommand{\mymv}{\si{\milli\volt}} 
+\newcommand{\myuv}{\si{\micro\volt}} 
+\newcommand{\myusr}{\si{\micro\steradian}}
+\newcommand{\onetwo}{1\nobreak--\nobreak2~\si{\micro\metre}}
+\newcommand{\onethree}{1\nobreak--\nobreak3~\si{\micro\metre}}
+\newcommand{\pbsband}{1.5\nobreak--\nobreak2.5~\si{\micro\metre}}
+\newcommand{\threefive}{3\nobreak--\nobreak5~\si{\micro\metre}}
+\newcommand{\eighttwelve}{8\nobreak--\nobreak12~\si{\micro\metre}}
+\newcommand{\mydegree}{\si{\degree}}
+\newcommand{\degC}[1]{\SI{#1}{\celsius}}
+\newcommand{\mymthreedb}{$-$3~dB}
+\newcommand{\mymaththreedb}{-3\;{\rm dB}}
+\newcommand{\deestarunits}{\si{\centi\meter\sqrt{\hertz}\per\watt}}
+
+% this command allows the use of strings with underscore in text, captions and sections
+% https://tex.stackexchange.com/questions/386953/url-in-section-title
+% works with and requires hyperref, if not using hyperref, just use \url{string}
+% the name comes from replace underscore
+\newcommand{\rusc}[1]{\texorpdfstring{\nolinkurl{#1}}{#1}}
+
+% upright derivative and similar
+%https://tex.stackexchange.com/questions/84302/what-is-the-difference-of-mathop-operatorname-and-declaremathoperator
+%https://tex.stackexchange.com/questions/1050/whats-the-difference-between-newcommand-and-newcommand
+% see also https://ctan.org/pkg/physics?lang=en 
+\newcommand{\diff}[1]{\operatorname{d\!}{}^{#1}}
+\newcommand{\euler}{\operatorname{e\!}{}}
+\newcommand{\imag}{\operatorname{j\!}{}}
+
+
+\newcommand{\immediateneed}{\textbf{Immediate Need: }}
+\newcommand{\futureneed}{\textbf{Future Need: }}
+
+\newcommand{\scesys}{\ac{SceSyS}}
+\newlist{legalout}{enumerate}{1}
+\setlist[legalout]{label*=\thesubsection.\arabic*}
+\newlist{legal}{enumerate}{10}
+\setlist[legal]{label*=.\arabic*}
+
+
+
+\newcommand{\colheightrule}{\rule[-2mm]{0mm}{6.5mm}}
+\newcommand{\res}{\marginpar{$\ast$}}
+\newcommand{\spec}[1]{\fcolorbox{half-gray}{light-gray}{#1}}
+
+\newcommand{\Optional}{\textbf{Optional.\ }}
+\newcommand{\Desirable}{\textbf{Desirable.\ }}
+\newcommand{\Mandatory}{\textbf{Mandatory.\ }}
+
+
+%******************  COMMENTS  **************
+% in the body text:
+%      text is marked with \begin{xxxx}...\end{xxxx} blocks.
+% in the doc header you can instruct
+%      \includecomment{xxxx} to include  the marked block
+%  or  \specialcomment{xxxx} to include  the marked block
+%      \excludecomment{xxxx} to exclude the marked block
+% It is important that the \begin{xxxx} and \end{xxxx} commands appear on a
+% separate line without whitespace characters before or after.
+%
+
+
+\newcommand{\getColorSpec}[3][\getColorSpecTemp]{%
+  \extractcolorspec{#3}\getColorSpecTemp
+  \expandafter\convertcolorspec\getColorSpecTemp{#2}#1}
+\makeatletter
+\newcommand\meaningbody[1]{%
+  {\ttfamily
+    \expandafter\strip@prefix\meaning#1}%
+}
+\makeatother
+\newcommand{\getHTMLcolour}{\getColorSpec[\HTMLcolor]{HTML}{.}\texttt{\meaningbody\HTMLcolor}}
+
+
+\specialcomment{note}{\begingroup\vspace{1mm}\color{bondiblue}\sffamily\small \hrule\textbf{\scshape \underline{Notes:}}%
+\begin{cenumerate}}{\end{cenumerate}
+\vspace{1mm}\hrule\vspace{3mm}\endgroup}
+
+\specialcomment{ati}{\begingroup\vspace{1mm}\color{brown}\sffamily\small \hrule\textbf{\scshape \underline{Acceptance Test Instruction:}}\\Required actions to show compliance with requirement for this clause and/or sub-clauses:%
+\begin{cenumerate}}{\end{cenumerate}
+\vspace{1mm}\hrule\vspace{3mm}\endgroup}
+
+\specialcomment{compliance}{\begingroup\vspace{1mm}\color{blue}\sffamily\small \hrule\textbf{\scshape \underline{Acceptance Test Compliance:}}\\Compliance/acceptance is demonstrated for this clause and/or sub-clauses as follows:%
+\begin{cenumerate}}{\end{cenumerate}
+\vspace{1mm}\hrule\vspace{3mm}\endgroup}
+
+\specialcomment{todo}{\begingroup\vspace{1mm}\color{brickred}\sffamily\small \hrule\textbf{\scshape \underline{To Do:}}%
+\begin{cenumerate}}{\end{cenumerate}
+\vspace{1mm}\hrule\vspace{3mm}\endgroup}
+
+\specialcomment{completed}{\begingroup\vspace{1mm}\color{pinegreen}\sffamily\small \hrule\textbf{\scshape \underline{Completed:}}%
+\begin{cenumerate}}{\end{cenumerate}
+\vspace{1mm}\hrule\vspace{3mm}\endgroup}
+
+\specialcomment{halconprivate}{\begingroup\vspace{1mm}\color{red}\sffamily\small \hrule\textbf{\scshape \underline{Halcon Private:}}
+\begin{cenumerate}}{\end{cenumerate}
+\vspace{1mm}\hrule\vspace{3mm}\endgroup}
+
+
+
+
+%\setlist{nolistsep}
+\newlist{cenumerate}{enumerate}{2}
+\setlist[cenumerate]{topsep=0pt,partopsep=0pt,parsep=0pt,itemsep=0pt,labelsep=1ex,label=\arabic*)}
+
+\newcommand{\marginnote}[1]{ \marginpar{{\scriptsize #1}}}
+\newcommand{\CJWpar}[2]{
+\parbox{#1}{\rule{0cm}{4mm}#2\rule[-2mm]{0cm}{4mm}}
+}
+   
+\newlength{\textwidttitlebox}
+\setlength{\textwidttitlebox}{90mm}
+
+
+
+\newcommand{\modtran}{\textsc{Modtran}}
+

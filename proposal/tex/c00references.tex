@@ -1,0 +1,40 @@
+% -*- TeX -*- -*- UK -*- -*- Soft -*-
+
+\fmchaptertoc{References} % unnumbered, show in TOC
+%\fmchapter{References} % unnumbered, do not show in TOC
+\label{sec:References}
+
+The following documents are referenced by this \DocType{}. In the event of conflict between the referenced documents and this document, the contents of this document shall take precedence.
+
+Inclusion of documents in this list does not imply total applicability. Only when referred to, they are applicable as explicitly stated, otherwise, they are indicated as general guidelines and reference material.
+Unless explicitly stated otherwise, the latest issue of a referenced document shall be applicable.
+
+
+\section*{STANDARDS}
+\label{sec:standardsBLkey}
+
+% STANDARDS must contain all standards related references, 
+% i.e. MIL-STD, MIL-HBK, IEEE, ISO, DEFSTAN, DOD, RTCA, etc.
+% The bibtex filter [stanspecmilrBLkey] is:
+%     standardsBLkey or  
+%     specificationBLkey or 
+%     milreferenceBLkey
+% Please set up the keyword field in the bibliography accordingly.
+
+\printStandardsBiblio
+
+\ \\
+\section*{SPECIFICATIONS AND REFERENCE DOCUMENTS}
+\label{sec:specmilrBLkey}
+\label{sec:combBLkey}
+
+% SPECIFICATIONS AND REFERENCE DOCUMENTS} must contain all 
+% configuration-controlled documents and other open references
+% like text books, publications, web sites, etc.  
+% The bibtex filter [notstanspecmilrBLkey] is:
+%    <not standardsBLkey> and 
+%    <not specificationBLkey> and 
+%    <not milreferenceBLkey>
+% Please set up the keyword field in the bibliography accordingly.
+
+\printReferencesBiblio

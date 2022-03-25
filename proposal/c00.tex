@@ -1,0 +1,61 @@
+% -*- TeX -*- -*- UK -*- -*- Soft -*-
+\chapterstyle{headChapterstyle}
+\makelocalfrontwidth
+
+\coverpage
+
+% \input{tex/c00amendments.tex}
+
+% exclude the distribution part in work package
+% \ifthenelse{\equal{\setupworkpackage}{true}}%
+% {}%
+% {
+% \clearpage
+% \input{tex/c00distribution.tex}
+% }
+
+\clearpage
+\tableofcontents
+
+\clearpage
+\listoftables
+
+\ \\
+\listoffigures
+
+\ \\
+%\input{./c00tbditems.tex}
+
+\clearpage
+\input{tex/c00abbrev.tex}
+\clearpage
+\input{tex/c00references.tex}
+
+
+% exclude the definitions and conventions parts in work package
+% \ifthenelse{\equal{\setupworkpackage}{true}}%
+% {}%
+% {
+% \clearpage
+% \input{tex/c00definitions.tex} \ \\
+% \clearpage
+% \input{tex/c00conventions.tex} \ \\[5mm]
+% }
+
+
+\clearpage
+%\listofTBCs*  % unnumbered, not shown in TOC
+%\listofTBCs    % unnumbered,  shown in TOC
+
+%\newpage
+%\renewcommand{\listTBBname}{HELP}
+%\listofTBBs*  % unnumbered, not shown in TOC
+%\listofTBBs    % unnumbered,  shown in TOC
+
+
+
+
+% it seems biber or some other header pages increment the table counter sometimes
+% ensure that the counter starts from zero
+\setcounter{table}{0}
+

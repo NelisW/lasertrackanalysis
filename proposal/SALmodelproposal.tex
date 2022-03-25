@@ -1,0 +1,88 @@
+% -*- TeX -*- -*- UK -*- -*- Soft -*-
+
+
+
+% this doc build instruction:  pdflatex-biblatex
+
+% enter the 'workpackage' option if wp, otherwise report will be used
+\documentclass{tex/halconrep}
+
+% the following block makes numbered entries in the PDF bookmarks
+% in order to work it must be exactly here and nowhere else :-( 
+% this block might clash with other hypertext use. Known clashes include:
+% - cross referencing between documents using xr
+% \usepackage{bookmark}
+% \bookmarksetup{numbered}
+% \makeatletter
+% \renewcommand{\Hy@numberline}[1]{#1. }
+% \makeatother
+    
+\input{tex/localcommands.tex}
+
+% predefined fields	 
+
+% for compound report name fill in DocProject and DocSubject, leave DocTitle empty:
+%\DocProject{DocProject}
+%\DocSubject{DocSubject}
+% for free form report title, use DocTitle, DocProject and DocSubject will be ignored.
+\DocTitle{SAL Simulation Tool Proposal }
+
+\DocEffecticeDate{DocEffectiveDate} %\today
+\DocApprovalOneName{DocApprovalOneName}
+\DocApprovalOneTitle{DocApprovalOneTitle}
+%\DocApprovalTwoName{DocApprovalTwoName}
+%\DocApprovalTwoTitle{DocApprovalTwoTitle}
+\DocAcceptanceOneName{DocAcceptanceOneName}
+%\DocAcceptanceOneTitle{DocAcceptanceOneTitle}
+%\DocAcceptanceTwoName{DocAcceptanceTwoName}
+%\DocAcceptanceTwoTitle{DocAcceptanceTwoTitle}
+\DocAuthorOneName{CJ Willers}
+\DocAuthorTwoName{MS Willers}
+%\DocAuthorThreeName{DocAuthorThreeName}
+%\DocAuthorFourName{DocAuthorFourName}
+\DocRevision{Issue XX}
+\DocNumber{DocNumber}
+\DocDate{\today}%\today
+\DocClassification{Unclassified}
+
+% biblatex bibtex entries stored in this repository:
+% http://gitlab.incomargroup.com/edge/sim/docs/references.git
+\addbibresource{../../../TechnicalDocs/references/allreferences.bib}
+\addbibresource{../../../TechnicalDocs/references/allreferences02.bib}
+\addbibresource{../../../TechnicalDocs/references/allreferences03.bib}
+\addbibresource{../../../TechnicalDocs/references/allreferences04.bib}
+\addbibresource{../../../TechnicalDocs/references/controlled.bib}
+\addbibresource{../../../TechnicalDocs/references/standards.bib}
+\addbibresource{../../../TechnicalDocs/references/specifications.bib}
+\addbibresource{../../../TechnicalDocs/references/milreferences.bib}
+\nobibintoc  % suppress bibliograhpy entries in TOC
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% files making up this document
+
+\includeonly{c00,c01,c02,c03,c04,c05,c06,c0a,c0b}
+
+\makeindex
+
+\begin{document}
+
+\include{c00} %
+\prepareBodyLayout
+\include{c01} % Introduction
+\include{c02} % Use cases
+\include{c03} % themes
+\include{c04} % Requirement
+% \include{c05} % 
+%\include{c06} % 
+%\prepareAppendix
+%\include{c0a} %
+%\include{c0b} %
+
+% \clearpage
+% \label{page:indexgeneral}
+% \printindex
+
+\end{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
