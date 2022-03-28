@@ -7,39 +7,40 @@
 \section{Introduction}
 
 There is a long-term \ac{EO} training program for Halcon employees \cite{willershalcontraining2021}.
-At the conclusion of the formal \ac{EO} lecture series to Halcon students, the next phase in the training plan starts.
-The next phase guides the UAE students further along the road, but highly focused on their work at hand.
+At the conclusion of the formal \ac{EO} lecture series to Halcon students, the next phase, vocational training can start.
+The vocational training guides the \ac{UAE} students further along the road, but highly focused on their \ac{SAL} seeker design work at hand.
 
-This proposal covers the 
+This vocational training takes place in the context of a broader \ac{MBSE} or \ac{MBD} methodology.  Another perspective on the same principle is `digital twin' where the design has two equivalent or even identical implementations: one implementation (the conventional) is in hardware, and its (identical) twin is implemented in a simulation.  Design and optimisation takes place on both the digital and the hardware sides: the work is done where it is most easily achieved or the effects measured.  
+Simulation-based design is central to this approach: the virtual twin, comprising the models, are implemented in simulation models with the required fidelity and accuracy. Given sufficiently well-tested models the behaviour of the simulation can be very close to the real hardware.
 
-
-The proposal is to develop a SAL performance model, progressing along the following steps in time:
-1.	Radiometry model covering: SNR, detection distance, etc., with Modtran atmo modelling (supporting user-defined models)
-2.	Add a scenario-based framework to evaluate different environmental conditions.
-3.	Add turbulence modelling to the above.
-4.	Integrate this into the existing 3D POV simulation (the LWIR sim we are already doing for Al Tariq). This will use a programmed weapon flight path. This model will support terrain view and background effects and laser illuminating geometry.
-5.	Add flight modelling and closed loop tracking and guidance.
-
-This model will be fully inhouse with no seat license cost issues and can be distributed freely.
-Steps 1 to 3 above cover static and `one dimensional' point-to-point modelling. Most of the work will be done in Python and Jupyter notebooks.
-Steps 4 and 5 above will exploit the work we are already doing, taking the 3D POV simulation to the next level. This work will be done in C++ and Python.
-
-Progressing along these steps will not always be simple, there are some interesting challenges like accounting for turbulence in the static performance model and modelling it in the dynamic 3-D model.  Another challenge will be to model the out-of-focus image with proper radiometric ray tracing.
-
-All of the above will be done with generic and typical parameters, not sensitive product design parameters.
-The system engineer and/or product design team can then enter in their design data to make it applicable to the specific weapon.
-This is done in the interest of not exposing product information wider than is essential.
 
 
 \section{Simulation Strategy}
 
 A two-prong strategy is followed:
 \begin{enumerate}
-    \item Develop in-house a smaller simulation with capabilities focused towards specific projects. Over time, this simulation can grow organically to serve multiple projects, but in all probability, it will never be an all encompassing simulation tool.  Such  simulation can be freely distributed within the organisation at low/no cost.
+    \item Develop in-house a smaller simulation with capabilities focused towards specific projects. Over time, this simulation can grow organically to serve multiple, but specific, projects; it is not intended to become a huge and all encompassing simulation tool.  Such  a light weight simulation can be freely distributed within the organisation at low/no cost.
     \item Buy a powerful \ac{COTS} system for the more demanding and specialist project needs.  License and  cost restrictions, together with steep learning curve entry barriers,  will limit the wide-scale use of such a tool.  However, some advanced requirements such as large and complex scenarios or \ac{SILS} or \ac{HILS} integration may force the use of such a system.
 \end{enumerate}
 
-This document covers the requirements and needs analysis of the second option: a powerful \ac{COTS} simulation tool.
-For the purpose of this specification the simulation environment will be called \scesys, irrespective of its commercial product name.
+This document covers the requirements and needs analysis of the first option: a light weight and focused simulation tool.
+
+The proposal is to develop a \ac{SAL} performance model, progressing along the following steps in time:
+\begin{enumerate}
+    \item Radiometry model covering: \ac{SNR}, detection distance, etc., with Modtran atmospheric modelling (supporting user-defined models)
+    \item Add a scenario-based framework to evaluate different environmental conditions.
+    \item Add turbulence modelling to the above.
+    \item Integrate this into the existing \ac{3D} \ac{POV} simulation (the \ac{LWIR} sim we are already doing for Al Tariq). This will use a programmed weapon flight path. This model will support terrain view and background effects and laser illuminating geometry.
+    \item Add flight modelling and closed loop tracking and guidance.
+\end{enumerate}
 
 
+This model will be fully inhouse with no seat license cost issues and can be distributed freely.
+Steps 1 to 3 above cover static and `one dimensional' point-to-point modelling. Most of the work will be done in Python and Jupyter notebooks.
+Steps 4 and 5 above will exploit the work we are already doing, taking the 3D \ac{POV} simulation to the next level. This work will be done in C++ and Python.
+
+Progressing along these steps will not always be simple, there are some interesting challenges like accounting for turbulence in the static performance model and modelling it in the dynamic \ac{3D} model.  Another challenge will be to model the out-of-focus image with proper radiometric ray tracing.
+
+All of the above will be done with generic and typical parameters, not sensitive product design parameters.
+The system engineer and/or product design team can then enter in their design data to make it applicable to the specific weapon.
+This is done in the interest of not exposing product information wider than is essential.

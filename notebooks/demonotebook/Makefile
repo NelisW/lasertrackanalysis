@@ -1,7 +1,7 @@
 TARGET=lasertrackanalysis
 PDFVIEWER=
 AFTERALL=postprocessing
-include Makefile.include
+include ../../common/Makefile.include
 
 postprocessing:
 	# Pass
