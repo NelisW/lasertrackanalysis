@@ -1,5 +1,5 @@
 
-The content in this document is taken verbatim from \cite{Willers2013}.
+The content in this document is taken with adaptation from \cite{Willers2013}.
 
 \index{case study!laser rangefinder range equation|(}\index{laser rangefinder!range equation case study|(}
 
@@ -10,6 +10,93 @@ In most laser rangefinders the transmitter and receiver are co-located and co-ax
 is directed to an object and reflected back from the object, the elapsed time between the departure and arrival of the reflected light pulse is an indication of the distance to the object. The objective with this analysis is to derive an expression for the SNR for the laser rangefinder. The  SNR can then be used to investigate the effect of several design parameters on system performance. For another approach to the range equation for laser rangefinders, see Kaminsky.\cite{Kaminski1980}
 
 
+\subsection{Specular reflective surfaces\index{laser rangefinder!specular reflective surface|(}}
+\label{rfdetectpaint}
+\noindent
+\index{bidirectional reflection distribution function (BRDF)!specular reflective surface}If the target has a specularly reflecting surface (see Figure~\ref{nonlambert}), the surface BRDF $f_r$ is used to calculate the reflection as a function of angle of incidence and the view direction angle (see Figure~\ref{fig:specref}).
+
+The relatively simple \index{bidirectional reflection distribution function (BRDF)!Phong model}\index{Phong BRDF model}Phong phenomenological BRDF model that includes diffuse\index{diffuse!reflectance, Phong BRDF} and specular components is
+\begin{equation}
+f_{r,{\rm Phong}} = \frac{\rho_d}{\pi} + \frac{\rho_s(n+1)\cos^n\alpha}{2\pi\cos\theta_i},
+\label{eq:BRDFequationPhong}
+\end{equation}
+where the angles are defined in Figure~\ref{fig:specref},
+\index{diffuse!reflectance!Phong BRDF model}\index{reflectance!diffuse}$\rho_d$ is the diffuse reflection constant,
+$n$ determines the angular divergence of the lobe, and \index{specular reflectance}\index{reflectance!specular}$\rho_s$ determines the peak value or `strength' of the lobe. Energy conservation requires that $\rho_s + \rho_d = \rho$, where $\rho=\Phi_r/\Phi_i$ is the total reflected flux divided by the total incident flux. The Phong model is not a  mathematically compliant BRDF because for large $\alpha$ the BRDF value could be negative (i.e., the lobe enters below the surface) --- and if the BRDF value is set to zero for such cases, the law of energy conservation is violated.  The Phong model therefore fails at large $\alpha$ angles and for small $n$. The Phong model also does not comply with the requirement for reciprocality.  There are several variations on the Phong theme that attempt to achieve increased accuracy.  Four typical Phong specular reflection profiles are shown in Figure~\ref{fig:brdfPhongProfiles}.
+
+
+\begin{figure}[bt]
+\centering
+\includegraphics[width=0.8\textwidth]{pic/brdfPhongProfiles.pdf}
+\caption{BRDF calculated by the simple Phong equation. \label{fig:brdfPhongProfiles}}
+\end{figure}
+
+
+Measurements on several paints and natural
+surfaces\cite{Bergh2004} indicated Phong model BRDF values as shown in
+Table~\ref{brdftab} and Figure~\ref{specref1}. The application of this data toward a laser rangefinder performance calculation is presented in Section~\ref{rfdetectpaint}.
+
+%old \begin{equation}
+%BRDF(\theta,\alpha)=
+%\frac{\rho_{d_\theta}}{\pi}\cos \theta^\prime+
+%\frac{(n+1)\rho_{s_\theta}}{2\pi}\cos^{n_\theta} \alpha
+%\end{equation}
+
+\begin{figure}[tb]
+\centering
+\includegraphics[width=0.8\textwidth]{pic/specref1.pdf}
+\caption{Phong BRDF for paints and natural surfaces in the NIR spectral band.
+\label{specref1}}
+\end{figure}
+
+
+\begin{table}[tb]
+\centering
+\caption{Phong BRDF parameters for paints and natural surfaces in the \index{nearinfrared@near-infrared (NIR)!Phong BRDF parameters}NIR spectral band.\label{brdftab}}
+%\vspace{-5mm}
+{\small
+\begin{tabular}{|l|c|c|c|}
+\hline
+\textbf{Surface finish} &\multicolumn{3}{c|}{\textbf{0.75--1.4-\si{\micro\metre}{} NIR band}} \\
+\cline{2-4}
+ & $\bm{ \rho_o}$& $\bm{\rho_s}$ & $\bm{n}$ \\
+\hline
+Matte dark earth paint & 0.11 & 0.033 & 6\\
+Matte blue paint & 0.52 & 0.022 & 8\\
+Matte white paint & 0.58 & 0.03 & 6\\
+Semi-matte light grey paint & 0.25 & 0.052 & 44\\
+Aircraft white paint & 0.6 & 0.05 & 80 \\
+%\hline
+%Navy light grey & 0.15 & 0.11 & 250\\
+%Sea grey & 0.09 & 0.053 & 130\\
+\hline
+Natural soil & 0.33 & & \\
+Sea sand & 0.49 && \\
+Green leaf & 0.43 & 0.015 & 15\\
+Gypsum / white chalk & 0.77 & 0.044 & 3\\
+Steel plate, freshly coated with Zn& 0.05 & 0.39 & 160\\
+%Brick & 0.35 & & \\
+Concrete & 0.55 & & \\
+\hline
+\end{tabular}
+}
+\end{table}
+
+\begin{figure}[t]
+\centering
+\resizebox{5in}{!}{\includegraphics{pic/nonlambert.pdf}}
+\caption{Micro-scale surface roughness and reflection.\label{nonlambert}}
+\end{figure}
+
+\begin{figure}[bt]
+\centerline{\resizebox{125mm}{!}{\includegraphics{pic/specref.pdf}}}
+\caption{Reflection geometry, here $\theta_i=\theta_{LO}$.\label{fig:specref}}
+\end{figure}
+
+\FloatBarrier
+
+
+
 
 \subsection{Noise equivalent irradiance\index{laser rangefinder!noise equivalent irradiance (NEE)}\index{irradiance!noise equivalent (NEE)|seealso{laser rangefinder example}}}
 \noindent
@@ -18,7 +105,7 @@ The noise equivalent irradiance in the receiver is given by \cite{Willers2013}
 NEE&=& \frac{
 \sqrt{\Delta f A_d}
 }{
-D^\ast A_1 \tau_a
+D^\ast A_1 \tau_o
 },
 \label{lrfnoise}\label{laserrxn}
 \end{eqnarray}
@@ -26,7 +113,7 @@ where
 $A_d$ is the detector area, 
 $\Delta f$ is the noise bandwidth in the receiver, 
 $A_1$ is the receiver aperture area, and 
-$\tau_a$ is the receiver filter transmittance. The
+$\tau_o$ is the receiver filter transmittance. The
 $D^\ast$ values can include all of the relevant noise terms such as detector noise, amplifier noise, background induced noise, and system noise. 
 For the purposes of this chapter, we will only work with a single $D^\ast$, assuming that all noise sources are incorporated in this value.
 The method whereby these noises are all combined into a single $D^\ast$ follows from noise power addition. If the different noise sources are uncorrelated, originating from different components each with individual, statistically independent processes, it can be shown that \textit{for uncorrelated sources},  noise \textit{power} adds linearly. The total noise is then given by
@@ -85,7 +172,7 @@ E_O&=&\frac{L_L A_L \tau_{OL}\;\cos\theta_L\cos\theta_{LO}}{R^2_{LO}}\nonumber\\
 where it is assumed that $\cos\theta_{L}=1$ because the laser beam radiates perpendicularly from the laser mirror. The uncooperative target object can have any orientation relative to the laser beam, denoted by $\theta_{LO}$.
 
 
-\subsection{Lambertian target reflectance\index{laser rangefinder!Lambertian reflective surface|(}}
+\subsection{Target reflectance\index{laser rangefinder!reflective surface|(}}
 \noindent
 The laser pulse falling onto the object is reflected by the object. Most
 natural surfaces have diffuse reflectance and scatter energy in all
@@ -99,10 +186,9 @@ L_O=\frac{\rho E_O}{\pi}=\frac{\rho\Phi_L \tau_{LO}\cos\theta_{LO}}{\Omega_L
 %============================================================
 
 The irradiance, caused by the reflected pulse, at the laser receiver is then, from \myeqno{irradef},
-\begin{eqnarray}
-E_R&=&\frac{\Phi_R}{\cjwmypartial A_1}\nonumber \\
-&=&\frac{L_O A_O \cos\theta_{OR}\tau_{OR}}{R_{OR}^2},
-\end{eqnarray}
+\begin{equation}
+E_R=\frac{\Phi_R}{\cjwmypartial A_1}=\frac{L_O A_O \cos\theta_{OR}\tau_{OR}}{R_{OR}^2},
+\end{equation}
 where $A_O$ is the area illuminated by the laser that is visible to the
 sensor. Further manipulation using \myeqno{loo} leads to
 \begin{eqnarray}
@@ -114,11 +200,26 @@ E_R&=&\frac{\Phi_L \tau_{LO}\cos\theta_{LO}\rho A_O \cos\theta_{OR}\tau_{OR}}
 \pi \Omega_L R^2_{LO}R^2_{OR}
 }.
 \end{eqnarray}
-By co-locating the laser transmitter and the receiver ($R^2_{LO}=R^2_{OR}=R$, $\tau_{LO}=\tau_{OR}=\tau_a$, and $\cos\theta_{LO}= \cos\theta_{OR}$) the expression for irradiance simplifies to
+
+Instead of using the diffuse reflectance, use the surface BRDF $f_r$
+
+\begin{eqnarray}
+E_R&=&\frac{
+f_r \Phi_L \tau_{LO} \cos\theta_{LO} A_O \cos\theta_{OR} \tau_{OR}
+}{
+\Omega_L R^2_{LO}R^2_{OR}
+}\label{erbrdf}.
+\end{eqnarray}
+
+
+\subsection{Equivalence to the radar range equation}
+
+
+By co-locating the laser transmitter and the receiver ($R^2_{LO}=R^2_{OR}=R$, $\tau_{LO}=\tau_{OR}=\tau_\textrm{atm}$, and $\cos\theta_{LO}= \cos\theta_{OR}$) the expression for irradiance simplifies to
 \begin{equation}
 E_R = \frac{
 (\rho \cos^2\theta_{LO} A_O)
-\Phi_L \tau^2_{a}
+\Phi_L \tau_\textrm{atm}^2
 }{
 \pi \Omega_L R^4
 },\label{radar}
@@ -133,37 +234,38 @@ where $R$ is the distance between the object and the rangefinder.
 
 \noindent
 The rangefinder irradiance SNR is the ratio of signal strength
-[\myeqno{radar}] to noise [\myeqno{lrfnoise}], and is given by
+[\myeqno{erbrdf}] to noise [\myeqno{lrfnoise}], and is given by
 \begin{eqnarray}
-\frac{E_R}{NEE}&=&\frac{
+\SNR = \frac{E_R}{NEE}&=&\frac{
 \frac{
-\rho \Phi_L \tau^2_{a} \cos^2\theta_{LO} A_O
+f_r  \Phi_L \tau_{LO} \cos\theta_{LO} \cos\theta_{OR} A_O
 }{
-\pi \Omega_L R^4 }
-}{\frac{\sqrt{\Delta f A_d}}{D^\ast A_1 \tau_a}}\\
-&=&\frac{\rho\Phi_L
-\tau_{a}^2 \cos^2\theta_{OR}A_0D^\ast A_1 \tau_a} { \pi\Omega_L R^4
+ \Omega_L R^2_{LO}R^2_{OR} }
+}{\frac{\sqrt{\Delta f A_d}}{D^\ast A_1 \tau_o}}\\
+&=&\frac{f_r \Phi_L
+\tau_{LO}\tau_{OR} \cos\theta_{LO} \cos\theta_{OR}A_0D^\ast A_1 \tau_o}
+{\Omega_L R^2_{LO}R^2_{OR}
 \sqrt{\Delta f A_d}}.
 \end{eqnarray}
 
-If Bouger's law is accepted for atmospheric transmittance, the transmittance can be written in terms of distance as $\tau_a=e^{-\gamma R}$. The laser flux is given by $\Phi_L\approx Q_L/t_p$, where $Q_L$ is the pulse
+If Bouger's law is accepted for atmospheric transmittance, the transmittance can be written in terms of distance as $\tau_\textrm{atm}=\exp^{-\gamma R}$. The laser flux is given by $\Phi_L\approx Q_L/t_p$, where $Q_L$ is the pulse
 energy in [J], and $t_p$ is the pulse width in [s]. The required receiver
 electronic noise bandwidth can be written in terms of the pulse width as
 $\Delta f=k_nk_f/t_p$, where 
 $k_n$ relates the electrical system electronic bandwidth with the noise equivalent bandwidth, and 
 $k_f$ relates the laser pulse width with the system electronic bandwidth (see \cite{Willers2013} for both definitions).
 
-The irradiance SNR can now be written as
+The SNR can now be written as
 \begin{equation}
-\frac{E_R}{NEE}=
+\SNR = 
 \overbrace{
-\left(\frac{A_0\rho \cos^2\theta D^\ast }{\pi \sqrt{k_nk_f}}\right)
+\left(\frac{A_0f_r  \cos\theta_{LO} \cos\theta_{OR} D^\ast }{\sqrt{k_nk_f}}\right)
 }^{\rm no\;\;control}
 \overbrace{
-\left(\frac{Q_L A_1 \tau_a }{\Omega_L\sqrt{t_p A_d}}\right)
+\left(\frac{Q_L A_1 \tau_o }{\Omega_L\sqrt{t_p A_d}}\right)
 }^{\rm design}
 \overbrace{
-\left(\frac{e^{-2\gamma R} }{R^4}\right).\\
+\left(\frac{\exp^{-\gamma (R_{LO}+R_{OR})} }{R^2_{LO}R^2_{OR}}\right).\\
 }^{\rm distance}
 \label{lrfd2}
 \end{equation}
@@ -190,28 +292,28 @@ The designer can now easily determine that increased laser energy and receiver a
 \noindent
 If the laser rangefinder is viewing targets against the terrain, the laser light is reflected from the target object as well as its  surrounding terrain. This implies that the real target area is not of sole importance because the terrain background also reflects the laser pulse. There are two possibilities regarding the laser transmitter and receiver beam or FOV sizes.
 
-Note that $\frac{E_R}{NEE}=SNR$, which is the signal-to-noise ratio.
+
 
 If the receiver FOV  is larger than the transmitter beam width, the receiver sees the whole laser spot. This implies that the effective laser spot area is defined by the laser beam width by
 \begin{equation}
-\Omega_L=\frac{A_O\cos\theta_{LO}}{R^2},
+\Omega_L=\frac{A_O\cos\theta_{LO}}{R^2_{LO}},
 \end{equation}
-and hence \myeqno{radar} --- the irradiance at the receiver ---  becomes
+and hence \myeqno{erbrdf} --- the irradiance at the receiver ---  becomes
 \begin{equation}
 E_R = \frac{
-\rho \Phi_L \tau^2_{a} \cos\theta_{LO}}{\pi R^2 }\label{lrfi1}, 
+f_r  \Phi_L \tau_{LO}\tau_{OR} \cos\theta_{LO}}{R^2_{OR} }\label{lrfi1}, 
 \end{equation}
 hence, and assuming that the target and background has the same reflectance across the laser spot:
 \begin{equation}
-SNR=
+\SNR=
 \overbrace{
-\left(\frac{\rho \cos^2\theta D^\ast }{\pi \sqrt{k_nk_f}}\right)
+\left(\frac{f_r \cos\theta_{LO} \cos\theta_{OR} D^\ast }{\sqrt{k_nk_f}}\right)
 }^{\rm no\;\;control}
 \overbrace{
-\left(\frac{Q_L A_1 \tau_a }{\sqrt{t_p A_d}}\right)
+\left(\frac{Q_L A_1 \tau_o }{\sqrt{t_p A_d}}\right)
 }^{\rm design}
 \overbrace{
-\left(\frac{e^{-2\gamma R} }{R^2}\right).\\
+\left(\frac{\exp^{-\gamma (R_{LO}+R_{OR})} }{R^2_{OR}}\right).\\
 }^{\rm distance}
 \label{lrfd2d}
 \end{equation}
@@ -219,28 +321,28 @@ SNR=
 
 If the receiver FOV is smaller than the transmitter beam width, the receiver only views a portion ($A_O^\prime<A_O$) of the whole laser spot. This implies that the effective laser spot area is determined by the receiver FOV footprint  $A_O^\prime$ as 
 \begin{equation}
-\Omega_R=\frac{A_O^\prime\cos\theta_{LO}}{R^2},
+\Omega_R=\frac{A_O^\prime\cos\theta_{LO}}{R^2_{OR}},
 \label{eq:lrfFOVsmaller}
 \end{equation}
-and hence \myeqno{radar} becomes
+and hence \myeqno{erbrdf} becomes
 \begin{equation}
 E_R = \frac{
-\rho \Phi_L \tau^2_{a} \cos\theta_{LO}}{\pi R^2 }\Upsilon , %\frac{\Omega_R}{\Omega_L}
+f_r \Phi_L \tau_{LO}\tau_{OR} \cos\theta_{LO}}{R^2_{OR} }\Upsilon , %\frac{\Omega_R}{\Omega_L}
 \label{lrfi2}
 \end{equation}
 where $\Upsilon =\Omega_R/\Omega_L$ is the fraction of the laser spot
 viewed by the laser receiver FOV, and $0\leq\Upsilon\leq 1$. 
 hence, and assuming that the target and background has the same reflectance across the laser spot:
 \begin{equation}
-SNR=
+\SNR=
 \overbrace{
-\left(\frac{\rho \cos^2\theta D^\ast }{\pi \sqrt{k_nk_f}}\right)
+\left(\frac{f_r  \cos\theta_{LO} \cos\theta_{OR} D^\ast }{\sqrt{k_nk_f}}\right)
 }^{\rm no\;\;control}
 \overbrace{
-\left(\frac{Q_L A_1 \tau_a \Upsilon}{\sqrt{t_p A_d}}\right)
+\left(\frac{Q_L A_1 \tau_o \Upsilon}{\sqrt{t_p A_d}}\right)
 }^{\rm design}
 \overbrace{
-\left(\frac{e^{-2\gamma R} }{R^2}\right).\\
+\left(\frac{\exp^{-\gamma (R_{LO}+R_{OR})} }{R^2_{OR}}\right).\\
 }^{\rm distance}
 \label{lrfd2e}
 \end{equation}
@@ -259,15 +361,15 @@ Laser guided sensors all employ quadrant detectors.  The detector shape is norma
 Hence, when considering the requirement to track the spot, the beam flux must be divided by four to obtain the signal strength on one quadrant of the detector. The SNR is then given by
 
 \begin{equation}
-SNR_Q=
+\SNR_Q=
 \overbrace{
-\left(\frac{\rho \cos^2\theta D^\ast }{\pi \sqrt{k_nk_f}}\right)
+\left(\frac{f_r  \cos\theta_{LO} \cos\theta_{OR} D^\ast }{\sqrt{k_nk_f}}\right)
 }^{\rm no\;\;control}
 \overbrace{
-\left(\frac{(Q_L/4) A_1 \tau_a \Upsilon}{\sqrt{t_p A_d/4}}\right)
+\left(\frac{(Q_L/4) A_1 \tau_o \Upsilon}{\sqrt{t_p A_d/4}}\right)
 }^{\rm design}
 \overbrace{
-\left(\frac{e^{-2\gamma R} }{R^2}\right).\\
+\left(\frac{\exp^{-\gamma (R_{LO}+R_{OR})} }{R^2_{OR}}\right).\\
 }^{\rm distance}
 \label{lrfd2f}
 \end{equation}
@@ -276,15 +378,15 @@ where the signal is divided by four when tracking perfectly and the area of the 
 
 The general form that models both detection and tracking would be
 \begin{equation}
-SNR_Q=
+\SNR_Q=
 \overbrace{
-\left(\frac{\rho \cos^2\theta D^\ast }{\pi \sqrt{T k_nk_f}}\right)
+\left(\frac{f_r  \cos\theta_{LO} \cos\theta_{OR} D^\ast }{\sqrt{T k_nk_f}}\right)
 }^{\rm no\;\;control}
 \overbrace{
-\left(\frac{Q_L A_1 \tau_a \Upsilon}{\sqrt{t_p A_d}}\right)
+\left(\frac{Q_L A_1 \tau_o \Upsilon}{\sqrt{t_p A_d}}\right)
 }^{\rm design}
 \overbrace{
-\left(\frac{e^{-2\gamma R} }{R^2}\right).\\
+\left(\frac{\exp^{-\gamma (R_{LO}+R_{OR})} }{R^2_{OR}}\right).\\
 }^{\rm distance}
 \label{lrfd2g}
 \end{equation}
@@ -297,10 +399,10 @@ where $T=1$ for detection and $T=4$ for tracking.
 \noindent
 The equations in the previous section provide the signal strength obtained from a laser transmitter at a laser receiver. An estimate of the detection range can be obtained by solving the range equation
 \begin{equation}
-SNR=\frac{E_R(R)}{NEE},
+\SNR=\frac{E_R(R)}{NEE},
 \label{eq:laserdetectionsnrerror}
 \end{equation}
-where $SNR$ is the signal-to-noise ratio required to achieve detection. Solving the detection range problem means finding a value for range $R$ in \myeqno{lrfd2} that would yield the required SNR. 
+where $\SNR$ is the signal-to-noise ratio required to achieve detection. Solving the detection range problem means finding a value for range $R$ in \myeqno{lrfd2} that would yield the required SNR. 
 
 
 \subsection{Example calculation\index{laser rangefinder!example calculation!range equation|(}\index{detection!range example calculation|(}}
@@ -322,7 +424,7 @@ C{17mm}|C{16mm}|C{16mm}|%
 \hline
 \textbf{Para\-meter} & \textbf{Value} & \textbf{Units}& \textbf{Para\-meter} & \textbf{Value} & \textbf{Units}\\
 \hline
-$\tau_a$&0.5 & & $\rho$&0.1& \\
+$\tau_o$&0.5 & & $\rho$&0.1& \\
 $A_1$ & $2\times10^{-3}$ &m$^2$ & $\cos\theta$ & 0.5 &  \\
 $k_n$ & 1 & & $\Upsilon$ & 1 &\\
 $k_f$ & 1 & & $\lambda$&1.06& \si{\micro\metre}{}\\\
@@ -401,115 +503,43 @@ Sunlit clouds & 100 & $1.7\times10^{11}$ &$1.48\times10^{11}$ &5.62 \\
 \index{detection!range example calculation|)}
 \index{laser rangefinder!example calculation!range equation|)}
 
-\begin{figure}[t]
-\centering
-\resizebox{5in}{!}{\includegraphics{pic/nonlambert.pdf}}
-\caption{Micro-scale surface roughness and reflection.\label{nonlambert}}
-\end{figure}
 
-\begin{figure}[bt]
-\centerline{\resizebox{125mm}{!}{\includegraphics{pic/specref.pdf}}}
-\caption{Reflection geometry, here $\theta_i=\theta_{LO}$.\label{fig:specref}}
-\end{figure}
 
-\subsection{Specular reflective surfaces\index{laser rangefinder!specular reflective surface|(}}
-\label{rfdetectpaint}
-\noindent
-\index{bidirectional reflection distribution function (BRDF)!specular reflective surface}If the target has a specularly reflecting surface (see Figure~\ref{nonlambert}), the surface BRDF $f_r$ is used to calculate the reflection as a function of angle of incidence and the view direction angle (see Figure~\ref{fig:specref}). Then 
+\subsection{Specular reflective surfaces om the terrain}
+
 \begin{equation}
-E_R = \frac{f_r(\theta_{LO}, \theta_{OR},\varphi_{LO},\varphi_{OR}
-) \Phi_L \tau^2_{a} \cos\theta_{LO}\Upsilon}{ R^2 }. %\frac{\Omega_R}{\Omega_L}
-\label{lrfi3}
+\SNR=
+\overbrace{\left(\frac{\rho_d}{\pi} + \frac{\rho_s(n+1)\cos^n\alpha}{2\pi\cos\theta_{LO}}\right)
+\left(\frac{  \cos\theta_{LO} \cos\theta_{OR} D^\ast }{\sqrt{k_nk_f}}\right)
+}^{\rm no\;\;control}
+\overbrace{
+\left(\frac{Q_L A_1 \tau_o \Upsilon}{\sqrt{t_p A_d}}\right)
+}^{\rm design}
+\overbrace{
+\left(\frac{\exp^{-\gamma (R_{LO}+R_{OR})} }{R^2_{OR}}\right).\\
+}^{\rm distance}
+\label{lrfd2e}
 \end{equation}
 
-The relatively simple \index{bidirectional reflection distribution function (BRDF)!Phong model}\index{Phong BRDF model}Phong phenomenological BRDF model that includes diffuse\index{diffuse!reflectance, Phong BRDF} and specular components is
-\begin{equation}
-f_{r,{\rm Phong}} = \frac{\rho_d}{\pi} + \frac{\rho_s(n+1)\cos^n\alpha}{2\pi\cos\theta_i},
-\label{eq:BRDFequationPhong}
-\end{equation}
-where the angles are defined in Figure~\ref{fig:specref},
-\index{diffuse!reflectance!Phong BRDF model}\index{reflectance!diffuse}$\rho_d$ is the diffuse reflection constant,
-$n$ determines the angular divergence of the lobe, and \index{specular reflectance}\index{reflectance!specular}$\rho_s$ determines the peak value or `strength' of the lobe. Energy conservation requires that $\rho_s + \rho_d = \rho$, where $\rho=\Phi_r/\Phi_i$ is the total reflected flux divided by the total incident flux. The Phong model is not a  mathematically compliant BRDF because for large $\alpha$ the BRDF value could be negative (i.e., the lobe enters below the surface) --- and if the BRDF value is set to zero for such cases, the law of energy conservation is violated.  The Phong model therefore fails at large $\alpha$ angles and for small $n$. The Phong model also does not comply with the requirement for reciprocality.  There are several variations on the Phong theme that attempt to achieve increased accuracy.  Four typical Phong specular reflection profiles are shown in Figure~\ref{fig:brdfPhongProfiles}.
 
+% If the surface reflection can be modeled by the Phong equation [\myeqno{eq:BRDFequationPhong}, Figure~\ref{fig:brdfPhongProfiles}], the irradiance at the receiver becomes
+% \begin{equation}
+% E_R = 
+% \left(
+% \frac{\rho_d}{\pi} + \frac{\rho_s(n+1)\cos^n\alpha}{2\pi\cos\theta_{LO}}
+% \right)
+% \left(\frac{
+% \Phi_L \exp^{-\gamma (R_{LO}+R_{OR})} \cos\theta_{LO}\Upsilon}{ R^2_{OR} } %\frac{\Omega_R}{\Omega_L}
+% \right),
+% \label{lrfi4}
+% \end{equation}
+% where the angles $\alpha$ and $\theta_{LO}=\theta_i$ follow from the geometry given in Figure~\ref{fig:specref}. Note that in the case of a laser rangefinder, the transmitter and receiver beams are co-axial, with the result that the $\widehat{I}$ and $\widehat{S}$ vectors align on the same axis, and hence $\theta=\theta^\prime$ and $\alpha=2\theta$.
 
-\begin{figure}[bt]
-\centering
-\resizebox{\textwidth}{!}{\includegraphics{pic/brdfPhongProfiles.pdf}}
-\caption{BRDF calculated by the simple Phong equation. \label{fig:brdfPhongProfiles}}
-\end{figure}
-
-
-Measurements on several paints and natural
-surfaces\cite{Bergh2004} indicated Phong model BRDF values as shown in
-Table~\ref{brdftab} and Figure~\ref{specref1}. The application of this data toward a laser rangefinder performance calculation is presented in Section~\ref{rfdetectpaint}.
-
-%old \begin{equation}
-%BRDF(\theta,\alpha)=
-%\frac{\rho_{d_\theta}}{\pi}\cos \theta^\prime+
-%\frac{(n+1)\rho_{s_\theta}}{2\pi}\cos^{n_\theta} \alpha
-%\end{equation}
-
-\begin{figure}[tb]
-\centering
-\resizebox{0.8\textwidth}{!}{\includegraphics{pic/specref1.pdf}}
-\caption{Phong BRDF for paints and natural surfaces in the NIR spectral band.
-\label{specref1}}
-\end{figure}
-
-
-\begin{table}[tb]
-\centering
-\caption{Phong BRDF parameters for paints and natural surfaces in the \index{nearinfrared@near-infrared (NIR)!Phong BRDF parameters}NIR spectral band.\label{brdftab}}
-%\vspace{-5mm}
-{\small
-\begin{tabular}{|l|c|c|c|}
-\hline
-\textbf{Surface finish} &\multicolumn{3}{c|}{\textbf{0.75--1.4-\si{\micro\metre}{} NIR band}} \\
-\cline{2-4}
- & $\bm{ \rho_o}$& $\bm{\rho_s}$ & $\bm{n}$ \\
-\hline
-Matte dark earth paint & 0.11 & 0.033 & 6\\
-Matte blue paint & 0.52 & 0.022 & 8\\
-Matte white paint & 0.58 & 0.03 & 6\\
-Semi-matte light grey paint & 0.25 & 0.052 & 44\\
-Aircraft white paint & 0.6 & 0.05 & 80 \\
-%\hline
-%Navy light grey & 0.15 & 0.11 & 250\\
-%Sea grey & 0.09 & 0.053 & 130\\
-\hline
-Natural soil & 0.33 & & \\
-Sea sand & 0.49 && \\
-Green leaf & 0.43 & 0.015 & 15\\
-Gypsum / white chalk & 0.77 & 0.044 & 3\\
-Steel plate, freshly coated with Zn& 0.05 & 0.39 & 160\\
-%Brick & 0.35 & & \\
-Concrete & 0.55 & & \\
-\hline
-\end{tabular}
-}
-\end{table}
-
-
-\FloatBarrier
-
-
-If the surface reflection can be modeled by the Phong equation [\myeqno{eq:BRDFequationPhong}, Figure~\ref{fig:brdfPhongProfiles}], the irradiance at the receiver becomes
-\begin{equation}
-E_R = 
-\left(
-\frac{\rho_d}{\pi} + \frac{\rho_s(n+1)\cos^n\alpha}{2\pi\cos\theta_{LO}}
-\right)
-\left(\frac{
-\Phi_L \tau^2_{a} \cos\theta_{LO}\Upsilon}{ R^2 } %\frac{\Omega_R}{\Omega_L}
-\right),
-\label{lrfi4}
-\end{equation}
-where the angles $\alpha$ and $\theta_{LO}=\theta_i$ follow from the geometry given in Figure~\ref{fig:specref}. Note that in the case of a laser rangefinder, the transmitter and receiver beams are co-axial, with the result that the $\widehat{I}$ and $\widehat{S}$ vectors align on the same axis, and hence $\theta=\theta^\prime$ and $\alpha=2\theta$.
 
 Using the information in Figure~\ref{specref1}, \myeqno{laserrxn} and the values $\Upsilon = 1$, 
 $\Delta f=66$~MHz, $A_d=4.6\times10^{-6}$~m$^2$,
 $D^\ast=6\times10^{11}$~cm$\cdot$$\sqrt{\rm Hz}$/W, $A_1=2\times10^{-3}$~m$^2$,
-and $\tau_r=0.5$, a sensor noise level of 3~\si{\micro\watt}{} is calculated.
+and $\tau_o=0.5$, a sensor noise level of 3~\si{\micro\watt}{} is calculated.
 Assume further that a SNR of 5 is required for
 operation. The operating range is then determined by solving for $R$ in
 \begin{equation}
@@ -518,7 +548,7 @@ operation. The operating range is then determined by solving for $R$ in
 \frac{(n+1)\rho_{s_\theta}\cos^n (2\theta_{LO})}{2\pi}
 \right)
 \left(\frac{
-\Phi_L \exp^{-2\gamma R}}{ R^2 }
+\Phi_L \exp^{-\gamma (R_{LO}+R_{OR})}}{ R^2_{OR} }
 \right),
 \label{lrfi5}
 \end{equation}

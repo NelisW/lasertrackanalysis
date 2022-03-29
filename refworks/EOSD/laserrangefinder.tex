@@ -20,6 +20,8 @@
 \newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
 \newcolumntype{R}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
 
+\usepackage{amsmath}
+
 \usepackage[protrusion=true,expansion=true]{microtype} % only works in pdflatex mode
 %\else  %  This text is produced when  in DVI mode,
 %\usepackage[dvips]{graphics}
@@ -38,6 +40,9 @@
 \newcommand{\myeqnoor}[2]{Equation~(\ref{#1}) or (\ref{#2})}
 \newcommand{\cjwmypartial}{d}
 \newcommand{\colheightrule}{\rule[-2mm]{0mm}{6.5mm}}
+
+\DeclareMathOperator{\SNR}{SNR} 
+
 
 % biblatex bibtex entries
 \addbibresource{../../../../TechnicalDocs/references/allreferences.bib}
