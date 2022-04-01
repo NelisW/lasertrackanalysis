@@ -1,21 +1,20 @@
 
-The content in this document is taken with adaptation from \cite{Willers2013}.
-
 \index{case study!laser rangefinder range equation|(}\index{laser rangefinder!range equation case study|(}
 
 \noindent
-In this section the range equation for a laser rangefinder is derived. Because the radiometry techniques developed in this book do not cover coherent sources, an explanation is in order. In this rangefinder application  the laser is used as a source with very high radiance. Laser rangefinders operate on the principle that light travels approximately 300~mm distance in one nanosecond. The time elapsed between the transmission of the pulse and the reception of the pulse is used to determine the distance. This specific analysis does not require the laser to be considered as a coherent source, and hence the radiometry techniques in this book can be used here. These techniques cannot be readily used for problems concerned with spatial or temporal coherence.
+In this section the range equation for a laser rangefinder is derived, taken with adaptation from \cite{Willers2013}. In this rangefinder application  the laser is used as a source with very high radiance. Laser rangefinders operate on the principle that light travels approximately 300~mm distance in one nanosecond. The time elapsed between the transmission of the pulse and the reception of the pulse is used to determine the distance. This specific analysis does not require the laser to be considered as a coherent source, and hence the radiometry techniques in this book can be used here. These techniques cannot be readily used for problems concerned with spatial or temporal coherence.
 
 In most laser rangefinders the transmitter and receiver are co-located and co-axial on the same optical path. If a laser pulse
-is directed to an object and reflected back from the object, the elapsed time between the departure and arrival of the reflected light pulse is an indication of the distance to the object. The objective with this analysis is to derive an expression for the SNR for the laser rangefinder. The  SNR can then be used to investigate the effect of several design parameters on system performance. For another approach to the range equation for laser rangefinders, see Kaminsky.\cite{Kaminski1980}
+is directed to an object and reflected back from the object, the elapsed time between the departure and arrival of the reflected light pulse is an indication of the distance to the object. The objective with this analysis is to derive an expression for the SNR for the laser rangefinder. The  SNR can then be used to investigate the effect of several design parameters on system performance. For other approaches to the range equation for pulsed laser systems see \cite{Kaminski1980,Barbaric2003ieee,Barbaric2003t,Manojlovic2009}.
 
 
 \subsection{Specular reflective surfaces\index{laser rangefinder!specular reflective surface|(}}
 \label{rfdetectpaint}
-\noindent
-\index{bidirectional reflection distribution function (BRDF)!specular reflective surface}If the target has a specularly reflecting surface (see Figure~\ref{nonlambert}), the surface BRDF $f_r$ is used to calculate the reflection as a function of angle of incidence and the view direction angle (see Figure~\ref{fig:specref}).
 
-The relatively simple \index{bidirectional reflection distribution function (BRDF)!Phong model}\index{Phong BRDF model}Phong phenomenological BRDF model that includes diffuse\index{diffuse!reflectance, Phong BRDF} and specular components is
+\noindent
+\index{bidirectional reflection distribution function (BRDF)!specular reflective surface}If the target has a specularly reflecting surface (Figure~\ref{nonlambert}), the surface BRDF $f_r$ is used to calculate the reflection as a function of angle of incidence and the view direction angle (Figure~\ref{fig:specref}).
+
+The relatively simple \index{bidirectional reflection distribution function (BRDF)!Phong model}\index{Phong BRDF model}Phong phenomenological BRDF model that includes diffuse\index{diffuse!reflectance, Phong BRDF} and specular components is \cite{Willers2013}
 \begin{equation}
 f_{r,{\rm Phong}} = \frac{\rho_d}{\pi} + \frac{\rho_s(n+1)\cos^n\alpha}{2\pi\cos\theta_i},
 \label{eq:BRDFequationPhong}
@@ -24,6 +23,17 @@ where the angles are defined in Figure~\ref{fig:specref},
 \index{diffuse!reflectance!Phong BRDF model}\index{reflectance!diffuse}$\rho_d$ is the diffuse reflection constant,
 $n$ determines the angular divergence of the lobe, and \index{specular reflectance}\index{reflectance!specular}$\rho_s$ determines the peak value or `strength' of the lobe. Energy conservation requires that $\rho_s + \rho_d = \rho$, where $\rho=\Phi_r/\Phi_i$ is the total reflected flux divided by the total incident flux. The Phong model is not a  mathematically compliant BRDF because for large $\alpha$ the BRDF value could be negative (i.e., the lobe enters below the surface) --- and if the BRDF value is set to zero for such cases, the law of energy conservation is violated.  The Phong model therefore fails at large $\alpha$ angles and for small $n$. The Phong model also does not comply with the requirement for reciprocality.  There are several variations on the Phong theme that attempt to achieve increased accuracy.  Four typical Phong specular reflection profiles are shown in Figure~\ref{fig:brdfPhongProfiles}.
 
+\begin{figure}[t]
+\centering
+\resizebox{5in}{!}{\includegraphics{pic/nonlambert.pdf}}
+\caption{Micro-scale surface roughness and reflection.\label{nonlambert}}
+\end{figure}
+
+
+\begin{figure}[bt]
+\centerline{\resizebox{125mm}{!}{\includegraphics{pic/specref.pdf}}}
+\caption{Reflection geometry, here $\theta_i=\theta_{LO}$.\label{fig:specref}}
+\end{figure}
 
 \begin{figure}[bt]
 \centering
@@ -34,13 +44,7 @@ $n$ determines the angular divergence of the lobe, and \index{specular reflectan
 
 Measurements on several paints and natural
 surfaces\cite{Bergh2004} indicated Phong model BRDF values as shown in
-Table~\ref{brdftab} and Figure~\ref{specref1}. The application of this data toward a laser rangefinder performance calculation is presented in Section~\ref{rfdetectpaint}.
-
-%old \begin{equation}
-%BRDF(\theta,\alpha)=
-%\frac{\rho_{d_\theta}}{\pi}\cos \theta^\prime+
-%\frac{(n+1)\rho_{s_\theta}}{2\pi}\cos^{n_\theta} \alpha
-%\end{equation}
+Table~\ref{brdftab} and Figure~\ref{specref1}. 
 
 \begin{figure}[tb]
 \centering
@@ -50,7 +54,7 @@ Table~\ref{brdftab} and Figure~\ref{specref1}. The application of this data towa
 \end{figure}
 
 
-\begin{table}[tb]
+\begin{table}[t]
 \centering
 \caption{Phong BRDF parameters for paints and natural surfaces in the \index{nearinfrared@near-infrared (NIR)!Phong BRDF parameters}NIR spectral band.\label{brdftab}}
 %\vspace{-5mm}
@@ -82,20 +86,9 @@ Concrete & 0.55 & & \\
 }
 \end{table}
 
-\begin{figure}[t]
-\centering
-\resizebox{5in}{!}{\includegraphics{pic/nonlambert.pdf}}
-\caption{Micro-scale surface roughness and reflection.\label{nonlambert}}
-\end{figure}
 
-\begin{figure}[bt]
-\centerline{\resizebox{125mm}{!}{\includegraphics{pic/specref.pdf}}}
-\caption{Reflection geometry, here $\theta_i=\theta_{LO}$.\label{fig:specref}}
-\end{figure}
-
-\FloatBarrier
-
-
+\afterpage{\clearpage}
+% \FloatBarrier
 
 
 \subsection{Noise equivalent irradiance\index{laser rangefinder!noise equivalent irradiance (NEE)}\index{irradiance!noise equivalent (NEE)|seealso{laser rangefinder example}}}
@@ -113,7 +106,7 @@ where
 $A_d$ is the detector area, 
 $\Delta f$ is the noise bandwidth in the receiver, 
 $A_1$ is the receiver aperture area, and 
-$\tau_o$ is the receiver filter transmittance. The
+$\tau_o$ is the receiver optics/filter transmittance. The
 $D^\ast$ values can include all of the relevant noise terms such as detector noise, amplifier noise, background induced noise, and system noise. 
 For the purposes of this chapter, we will only work with a single $D^\ast$, assuming that all noise sources are incorporated in this value.
 The method whereby these noises are all combined into a single $D^\ast$ follows from noise power addition. If the different noise sources are uncorrelated, originating from different components each with individual, statistically independent processes, it can be shown that \textit{for uncorrelated sources},  noise \textit{power} adds linearly. The total noise is then given by
@@ -131,13 +124,51 @@ Like noise $D^\ast$ also adds in quadrature,
 \end{equation}
 \index{power spectral density (PSD)!combining spectra|)}
 
-
 \begin{figure}[t]
 \centering
 \resizebox{0.8\textwidth}{!}{\includegraphics{pic/rangelay.pdf}}
 \caption{Laser rangefinder layout.
 \label{rangelay}}
 \end{figure}
+
+Background-limited operation occurs if the noise induced by the background flux exceeds the combined thermal-generation current noise, diffusion current noise, and Johnson noise \cite[Section 5.9.5.1]{Willers2013}. Then $D^\ast$ is given by 
+\begin{equation}
+D^\ast  = \frac
+{\eta \lambda}
+{hc\sqrt{2}\sqrt{   \int_0^{\lambda}\eta E_q d\lambda  } }
+=
+\frac
+{\lambda} {hc\sqrt{2}}\sqrt{ \frac{\eta}{ \int_0^{\lambda} E_q d\lambda}}.
+\label{backqq}
+\end{equation}
+where the integral is calculated over the detector's sensitive spectral range, 
+$\eta$ is the detector quantum efficiency, and $E_q$ 
+is the  background photon irradiance in [q/(m$^2\cdot$s)].
+The background irradiance in this case emanates from reflected sunlight, then 
+\begin{equation}
+\int_0^{\lambda} E_q d\lambda=\int_0^{\lambda}k_\lambda E_q (T_\textrm{sun}) d\lambda
+\end{equation}
+where $k\lambda$ is a spectral value allowing for spectral reflectance and viewing geometry and $T_\textrm{sun}$ is the sun's surface temperature. Assuming a constant spectral reflectance, the value of $k$ can be determined from the specified background radiance $L_\textrm{back-e}$ in \si{\watt/(\metre\squared.\steradian)} by using the radiant (watt) form of the above integral. Then 
+\begin{equation}
+k=\frac{L_\textrm{back-e}}{\int_0^{\lambda} E_e (T_\textrm{sun}) d\lambda}
+\end{equation}
+Then $D^\ast$ is given by
+\begin{equation}
+\frac
+{\lambda} {hc\sqrt{2}}\sqrt{ \frac{\eta}{ k\int_0^{\lambda} E_q (T_\textrm{sun}) d\lambda}}
+=\frac
+{\lambda} {hc\sqrt{2}}
+\sqrt{\frac{\eta\cdot\int_0^{\lambda} E_e (T_\textrm{sun}) d\lambda}{L_\textrm{back-e}\cdot\int_0^{\lambda}E_q (T_\textrm{sun}) d\lambda}}.
+\label{backqqaa}
+\end{equation}
+On the assumption of a narrow spectral filter width the integrals degenerate into simple products, yielding the $D^\ast$ at the filter/laser wavelength
+\begin{equation}
+D^\ast(\lambda)
+=\frac
+{\lambda} {hc\sqrt{2}}
+\sqrt{\frac{\eta E_e (T_\textrm{sun},\lambda)}{L_\textrm{back-e}E_q (T_\textrm{sun},\lambda) }}.
+\label{backqqab}
+\end{equation}
 
 
 \subsection{Signal irradiance\index{laser rangefinder!signal irradiance}}
