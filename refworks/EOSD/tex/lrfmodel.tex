@@ -91,6 +91,75 @@ Concrete & 0.55 & & \\
 % \FloatBarrier
 
 
+\subsection{Probability of Detection and False Alarm}
+
+The performance of this class of applications depends relatively strongly on the temporal shape of individual instances of the signal. Each pulse is a unique and independent event. 
+The calculation of  the probability of detection and false alarm rate requires information about the peak signal, rms noise, and threshold setting. The general  solutions for arbitrary pulse shapes, noise spectra, and nonlinear detection processes are very complex and are not considered here. If the signal is a square pulse, filtered by a matched filter, and the input noise is white with a Gaussian distribution, as is the case for most natural noises, the detection performance can be readily calculated. This is a special case, but, is useful to obtain at least an order of magnitude indication. 
+
+The detection of a square pulse of width $t_p$, immersed in white noise after passing through a matched filter with bandwidth $\Delta f=1/(2 t_p)$, is shown graphically in the figure below. Detection is the event where the signal corrupted by noise exceeds the detection threshold. A false alarm is the event where the noise (with no signal present) exceeds the detection threshold.
+The average false alarm rate is given by
+\begin{equation}
+FAR=
+\frac{1}{2  t_p \sqrt{3}}\exp^{-\frac{1}{2}\left(\frac{i_t}{i_n}\right)^2}
+\end{equation}
+where
+$i_t$ is the threshold value, and
+$i_n$ is the rms noise value at the input to the threshold detector.  The probability of false alarm is 
+\begin{equation}
+P_f = {FAR\, t_p}=
+\frac{1}{2 \sqrt{3}}\exp^{-\frac{1}{2}\left(\frac{i_t}{i_n}\right)^2},
+\end{equation}
+
+When there is a signal present, the probability of detection (signal plus noise exceeds the threshold) is given by
+\begin{equation}
+P_d \approx
+\frac{1}{2}\left[
+1+{\textrm{erf}}\left(
+\frac{i_s-i_t}{\sqrt{2}i_n}
+\right)
+\right]
+\end{equation}
+where ${\textrm{erf}}$ is the error function:
+\begin{equation}
+{\textrm{erf}}(z)=\frac{2}{\sqrt{\pi}}\int_0^z e^{-t^2}dt.
+\end{equation}
+
+\begin{figure}[t]
+\centering
+\resizebox{5in}{!}{\includegraphics{pic/noiseprob01.pdf}}
+\caption{Rice model probability of detection and false alarm\label{noiseprob01}}
+\end{figure}
+
+
+For a given combination of threshold value $i_t$, noise value $i_n$, and signal value $i_s$, the average false alarm rate and probability of detection can be determined. Alternatively, for a given required false alarm rate or probability of detection, the threshold-to-noise ratio and SNR can be determined. These equations can be solved numerically or graphically.
+
+\textit{Note that the Rice model described above is derived for a square detector and a matched filter (time-bandwidth product of 0.5).}  Different pulse shapes and time-bandwidth products technically invalidates the simple model used here.  It remains therefore only a rough guide at to order-of-magnitude performance.  More accurate models are required for more sophisticated analyses.
+
+As an example of the application of these formulae, consider the following
+problem in the Electro-Optics Handbook The SNR and threshold-to-noise ratio  (TNR) for a laser rangefinder must be found. The laser pulses are 100~ns wide. A range gate of 67~$\mu$s is used. One in 1000 pulses may be lost, and a false alarm detection of 1 in 1000 pulses is required.  The solution is as follows:
+
+\begin{enumerate}
+\item 
+The false alarm performance must be 1 per 1000 pulses, each pulse arriving in a 67-$\mu$s window. The false alarm rate must therefore be less than $1/(1000 \times 67 \times 10^{-6})=15$ pulses per second.
+
+\item   $t_p {FAR} =0.1\times 10^{-6}\times 15=1.5\times
+10^{-6}$.
+
+\item   The TNR is calculated as
+\begin{equation}
+\frac{i_t}{i_n}=\sqrt{-2\log_e\left(2 t_p \sqrt{3}\;{FAR}\right)}=4.93
+\end{equation}
+
+\item  The SNR is given by
+\begin{equation}
+\frac{i_s}{i_n}=\sqrt{2}\;{\textrm{erf}}^{-1}\left(2P_d-1\right)+\frac{i_t}{i_n},
+\end{equation}
+requiring a SNR of 8.023.
+
+\item  The equations can be solved by the pyradi implementation of these equations. 
+\end{enumerate}
+
+
 \subsection{Noise equivalent irradiance\index{laser rangefinder!noise equivalent irradiance (NEE)}\index{irradiance!noise equivalent (NEE)|seealso{laser rangefinder example}}}
 \noindent
 The noise equivalent irradiance in the receiver is given by \cite{Willers2013}
@@ -124,12 +193,6 @@ Like noise $D^\ast$ also adds in quadrature,
 \end{equation}
 \index{power spectral density (PSD)!combining spectra|)}
 
-\begin{figure}[t]
-\centering
-\resizebox{0.8\textwidth}{!}{\includegraphics{pic/rangelay.pdf}}
-\caption{Laser rangefinder layout.
-\label{rangelay}}
-\end{figure}
 
 Background-limited operation occurs if the noise induced by the background flux exceeds the combined thermal-generation current noise, diffusion current noise, and Johnson noise \cite[Section 5.9.5.1]{Willers2013}. Then $D^\ast$ is given by 
 \begin{equation}
@@ -170,7 +233,6 @@ D^\ast(\lambda)
 \label{backqqab}
 \end{equation}
 
-
 \subsection{Signal irradiance\index{laser rangefinder!signal irradiance}}
 \noindent
 The geometrical relationship between the laser transmitter, the object, and the laser receiver is shown in Figure~\ref{rangelay}. The laser power or flux is denoted by $\Phi_L$ (in watts), the distance from the laser to the object is $R_{LO}$, and the distance from the object to the receiver is $R_{OR}$. The illuminated object-surface normal vector makes an angle $\theta_{LO}$ with the laser illumination direction, and an angle $\theta_{OR}$ with the receiver sightline direction.
@@ -203,7 +265,7 @@ E_O&=&\frac{L_L A_L \tau_{OL}\;\cos\theta_L\cos\theta_{LO}}{R^2_{LO}}\nonumber\\
 where it is assumed that $\cos\theta_{L}=1$ because the laser beam radiates perpendicularly from the laser mirror. The uncooperative target object can have any orientation relative to the laser beam, denoted by $\theta_{LO}$.
 
 
-\subsection{Target reflectance\index{laser rangefinder!reflective surface|(}}
+\subsubsection{Target reflectance\index{laser rangefinder!reflective surface|(}}
 \noindent
 The laser pulse falling onto the object is reflected by the object. Most
 natural surfaces have diffuse reflectance and scatter energy in all
@@ -213,7 +275,13 @@ L_O=\frac{\rho E_O}{\pi}=\frac{\rho\Phi_L \tau_{LO}\cos\theta_{LO}}{\Omega_L
 \pi R^2_{LO}}.\label{loo}
 \end{equation}
 
-
+\begin{figure}[t]
+    \centering
+    \resizebox{0.8\textwidth}{!}{\includegraphics{pic/rangelay.pdf}}
+    \caption{Laser rangefinder layout.
+    \label{rangelay}}
+    \end{figure}
+    
 %============================================================
 
 The irradiance, caused by the reflected pulse, at the laser receiver is then, from \myeqno{irradef},
@@ -243,7 +311,7 @@ f_r \Phi_L \tau_{LO} \cos\theta_{LO} A_O \cos\theta_{OR} \tau_{OR}
 \end{eqnarray}
 
 
-\subsection{Equivalence to the radar range equation}
+\subsubsection{Equivalence to the radar range equation}
 
 
 By co-locating the laser transmitter and the receiver ($R^2_{LO}=R^2_{OR}=R$, $\tau_{LO}=\tau_{OR}=\tau_\textrm{atm}$, and $\cos\theta_{LO}= \cos\theta_{OR}$) the expression for irradiance simplifies to
@@ -261,7 +329,10 @@ where $R$ is the distance between the object and the rangefinder.
 
 %++++++++++++++++++++++++++++++++++++++++++++++++++
 
-\subsection{Lambertian targets against the sky}
+
+\subsection{Signal-to-Noise Ratio}
+
+\subsubsection{Lambertian targets against the sky}
 
 \noindent
 The rangefinder irradiance SNR is the ratio of signal strength
@@ -319,7 +390,7 @@ The designer can now easily determine that increased laser energy and receiver a
 
 %++++++++++++++++++++++++++++++++++++++++++++++++++
 
-\subsection{Lambertian targets against terrain}
+\subsubsection{Lambertian targets against terrain}
 \noindent
 If the laser rangefinder is viewing targets against the terrain, the laser light is reflected from the target object as well as its  surrounding terrain. This implies that the real target area is not of sole importance because the terrain background also reflects the laser pulse. There are two possibilities regarding the laser transmitter and receiver beam or FOV sizes.
 
@@ -383,45 +454,6 @@ for the fraction $\Upsilon$. \myeqno{lrfi2} is the more general case
 because \myeqno{lrfi1} is a special case when $\Upsilon=1$.
 \index{laser rangefinder!Lambertian reflective surface|)}
 
-
-
-\subsection{Quadrant detectors}
-\noindent
-Laser guided sensors all employ quadrant detectors.  The detector shape is normally round, divided into four equal-sized, radial sector-shaped quadrants, each of these quadrants in effect is a separate detector. Suppose that in the initial detection phase of acquisition, the laser flux may fall only on a single quadrant.  After initial acquisition, when tracking the target, the (defocused) laser flux is spread approximately equal between the four quadrants.
-
-Hence, when considering the requirement to track the spot, the beam flux must be divided by four to obtain the signal strength on one quadrant of the detector. The SNR is then given by
-
-\begin{equation}
-\SNR_Q=
-\overbrace{
-\left(\frac{f_r  \cos\theta_{LO} \cos\theta_{OR} D^\ast }{\sqrt{k_nk_f}}\right)
-}^{\rm no\;\;control}
-\overbrace{
-\left(\frac{(Q_L/4) A_1 \tau_o \Upsilon}{\sqrt{t_p A_d/4}}\right)
-}^{\rm design}
-\overbrace{
-\left(\frac{\exp^{-\gamma (R_{LO}+R_{OR})} }{R^2_{OR}}\right).\\
-}^{\rm distance}
-\label{lrfd2f}
-\end{equation}
-where the signal is divided by four when tracking perfectly and the area of the detector also divides by four.
-
-
-The general form that models both detection and tracking would be
-\begin{equation}
-\SNR_Q=
-\overbrace{
-\left(\frac{f_r  \cos\theta_{LO} \cos\theta_{OR} D^\ast }{\sqrt{T k_nk_f}}\right)
-}^{\rm no\;\;control}
-\overbrace{
-\left(\frac{Q_L A_1 \tau_o \Upsilon}{\sqrt{t_p A_d}}\right)
-}^{\rm design}
-\overbrace{
-\left(\frac{\exp^{-\gamma (R_{LO}+R_{OR})} }{R^2_{OR}}\right).\\
-}^{\rm distance}
-\label{lrfd2g}
-\end{equation}
-where $T=1$ for detection and $T=4$ for tracking.
 
 
 
@@ -536,7 +568,7 @@ Sunlit clouds & 100 & $1.7\times10^{11}$ &$1.48\times10^{11}$ &5.62 \\
 
 
 
-\subsection{Specular reflective surfaces om the terrain}
+\subsection{Specular reflective surfaces}
 
 \begin{equation}
 \SNR=
@@ -637,4 +669,43 @@ From these results, it would appear that extraordinary attempts to reduce the la
 \index{laser rangefinder!specular reflective surface|)}
 
 \index{case study!laser rangefinder range equation|)}\index{laser rangefinder!range equation case study|)} 
+
+
+\subsection{Quadrant detectors}
+\noindent
+Laser guided sensors all employ quadrant detectors.  The detector shape is normally round, divided into four equal-sized, radial sector-shaped quadrants, each of these quadrants in effect is a separate detector. Suppose that in the initial detection phase of acquisition, the laser flux may fall only on a single quadrant.  After initial acquisition, when tracking the target, the (defocused) laser flux is spread approximately equal between the four quadrants.
+
+Hence, when considering the requirement to track the spot, the beam flux must be divided by four to obtain the signal strength on one quadrant of the detector. The SNR is then given by
+
+\begin{equation}
+\SNR_Q=
+\overbrace{
+\left(\frac{f_r  \cos\theta_{LO} \cos\theta_{OR} D^\ast }{\sqrt{k_nk_f}}\right)
+}^{\rm no\;\;control}
+\overbrace{
+\left(\frac{(Q_L/4) A_1 \tau_o \Upsilon}{\sqrt{t_p A_d/4}}\right)
+}^{\rm design}
+\overbrace{
+\left(\frac{\exp^{-\gamma (R_{LO}+R_{OR})} }{R^2_{OR}}\right).\\
+}^{\rm distance}
+\label{lrfd2f}
+\end{equation}
+where the signal is divided by four when tracking perfectly and the area of the detector also divides by four.
+
+
+The general form that models both detection and tracking would be
+\begin{equation}
+\SNR_Q=
+\overbrace{
+\left(\frac{f_r  \cos\theta_{LO} \cos\theta_{OR} D^\ast }{\sqrt{T k_nk_f}}\right)
+}^{\rm no\;\;control}
+\overbrace{
+\left(\frac{Q_L A_1 \tau_o \Upsilon}{\sqrt{t_p A_d}}\right)
+}^{\rm design}
+\overbrace{
+\left(\frac{\exp^{-\gamma (R_{LO}+R_{OR})} }{R^2_{OR}}\right).\\
+}^{\rm distance}
+\label{lrfd2g}
+\end{equation}
+where $T=1$ for detection and $T=4$ for tracking.
 
