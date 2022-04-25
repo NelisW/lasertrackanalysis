@@ -286,3 +286,6 @@ TSWLatexianTemp*
 revision.tex
 .ipynb_checkpoints
 /notebooks/demonotebook/pic/lasertrackanalysis*.png
+/notebooks/demonotebook/lasertrackanalysis.bib
+/notebooks/demonotebook/lasertrackanalysis.tex
+/notebooks/demonotebook/lasertrackanalysis.pdf
