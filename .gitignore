@@ -290,3 +290,4 @@ revision.tex
 /notebooks/demonotebook/lasertrackanalysis.tex
 /notebooks/demonotebook/lasertrackanalysis.pdf
 /halcon/paramerts SNR-cjw.xlsx
+/halconmodel/__pycache__
